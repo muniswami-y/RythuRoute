@@ -1,0 +1,17 @@
+{
+  "name": "rythuroute",
+  "version": "1.0.0",
+  "description": "RythuRoute - Fresh Farm Direct Marketplace",
+  "main": "backend/src/server.js",
+  "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "build": "npm --prefix backend install && npm --prefix frontend install && npm --prefix frontend run build && node backend/seed.js",
+    "seed": "node backend/seed.js",
+    "start": "node backend/src/server.js",
+    "dev:backend": "npm run --prefix backend dev",
+    "dev:frontend": "npm run --prefix frontend dev"
+  },
+  "keywords": ["agriculture", "marketplace", "farmers", "ecommerce", "razorpay"],
+  "author": "RythuRoute Team",
+  "license": "ISC"
+}
