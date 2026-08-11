@@ -11,6 +11,9 @@
     "dev:backend": "npm run --prefix backend dev",
     "dev:frontend": "npm run --prefix frontend dev"
   },
+  "engines": {
+    "node": ">=20.0.0 <21.0.0"
+  },
   "keywords": ["agriculture", "marketplace", "farmers", "ecommerce", "razorpay"],
   "author": "RythuRoute Team",
   "license": "ISC"
