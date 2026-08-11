@@ -48,7 +48,7 @@ export default function Products() {
               <Link to={`/products/${product.id}`} key={product.id} className="card" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden', transition: 'transform 0.2s', ':hover': { transform: 'translateY(-4px)' } }}>
                 <div style={{ height: 200, background: 'var(--gray-100)', position: 'relative' }}>
                   {product.image_url ? (
-                    <img src={`http://localhost:5000${product.image_url}`} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={product.image_url.startsWith('http') ? product.image_url : (product.image_url.startsWith('/') ? product.image_url : `/${product.image_url}`)} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   ) : (
                     <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Package size={48} color="var(--gray-300)" />

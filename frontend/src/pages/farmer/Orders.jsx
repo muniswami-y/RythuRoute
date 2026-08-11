@@ -52,7 +52,7 @@ export default function Orders() {
                   <div style={{ display: 'flex', gap: 'var(--space-4)', alignItems: 'center', background: 'var(--gray-50)', padding: 'var(--space-4)', borderRadius: 'var(--radius-md)' }}>
                     <div style={{ width: 60, height: 60, borderRadius: 'var(--radius-md)', background: 'var(--gray-200)', overflow: 'hidden' }}>
                       {order.image_url ? (
-                        <img src={`http://localhost:5000${order.image_url}`} alt={order.product_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={order.image_url.startsWith('http') ? order.image_url : (order.image_url.startsWith('/') ? order.image_url : `/${order.image_url}`)} alt={order.product_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       ) : (
                         <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           <Package size={24} color="var(--gray-400)" />

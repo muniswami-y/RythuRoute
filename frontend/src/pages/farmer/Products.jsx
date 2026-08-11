@@ -69,7 +69,7 @@ export default function Products() {
                   <tr key={product.id}>
                     <td>
                       {product.image_url ? (
-                        <img src={`http://localhost:5000${product.image_url}`} alt={product.name} style={{ width: 40, height: 40, borderRadius: 'var(--radius-sm)', objectFit: 'cover' }} />
+                        <img src={product.image_url.startsWith('http') ? product.image_url : (product.image_url.startsWith('/') ? product.image_url : `/${product.image_url}`)} alt={product.name} style={{ width: 40, height: 40, borderRadius: 'var(--radius-sm)', objectFit: 'cover' }} />
                       ) : (
                         <div style={{ width: 40, height: 40, borderRadius: 'var(--radius-sm)', background: 'var(--gray-100)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           <Package size={20} color="var(--gray-400)" />

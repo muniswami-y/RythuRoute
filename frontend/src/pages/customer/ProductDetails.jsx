@@ -37,7 +37,7 @@ export default function ProductDetails() {
           {/* Image */}
           <div style={{ borderRadius: 'var(--radius-xl)', overflow: 'hidden', background: 'var(--gray-100)', aspectRatio: '1/1', position: 'relative' }}>
             {product.image_url ? (
-              <img src={`http://localhost:5000${product.image_url}`} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src={product.image_url.startsWith('http') ? product.image_url : (product.image_url.startsWith('/') ? product.image_url : `/${product.image_url}`)} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             ) : (
               <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #d8f3dc, #95d5b2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Package size={64} color="rgba(255,255,255,0.5)" />

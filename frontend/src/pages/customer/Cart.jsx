@@ -40,7 +40,7 @@ export default function Cart() {
               <div key={item.product_id} className="card" style={{ display: 'flex', gap: 'var(--space-4)', padding: 'var(--space-4)' }}>
                 <div style={{ width: 100, height: 100, borderRadius: 'var(--radius-md)', background: 'var(--gray-100)', overflow: 'hidden' }}>
                   {item.image_url ? (
-                    <img src={`http://localhost:5000${item.image_url}`} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={item.image_url.startsWith('http') ? item.image_url : (item.image_url.startsWith('/') ? item.image_url : `/${item.image_url}`)} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   ) : (
                     <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Package size={32} color="var(--gray-300)" />
