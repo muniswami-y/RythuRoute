@@ -3,12 +3,12 @@ const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 const path = require('path');
 const fs = require('fs');
-const { Client: PgClient } = require('pg');
 
 async function seed() {
   const isPostgres = !!(process.env.DATABASE_URL || process.env.POSTGRES_URL);
 
   if (isPostgres) {
+    const { Client: PgClient } = require('pg');
     const connStr = process.env.DATABASE_URL || process.env.POSTGRES_URL;
     const client = new PgClient({
       connectionString: connStr,

@@ -2,7 +2,6 @@ const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 const path = require('path');
 const fs = require('fs');
-const { Pool: PgPool } = require('pg');
 
 const dbPath = path.resolve(__dirname, '../../../database/database.sqlite');
 const isPostgres = !!(process.env.DATABASE_URL || process.env.POSTGRES_URL);
@@ -29,6 +28,7 @@ async function getSqliteConnection() {
 
 function getPgPool() {
   if (!pgPoolInstance) {
+    const { Pool: PgPool } = require('pg');
     const connStr = process.env.DATABASE_URL || process.env.POSTGRES_URL;
     pgPoolInstance = new PgPool({
       connectionString: connStr,
