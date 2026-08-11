@@ -56,11 +56,11 @@ const frontendDistPath = path.resolve(__dirname, '../../frontend/dist');
 app.use(express.static(frontendDistPath));
 
 // SPA fallback for all client routes (excluding API and uploads)
-app.get('*', (req, res, next) => {
-  if (req.path.startsWith('/api') || req.path.startsWith('/uploads') || req.path === '/health') {
-    return next();
+app.use((req, res, next) => {
+  if (req.method === 'GET' && !req.path.startsWith('/api') && !req.path.startsWith('/uploads') && req.path !== '/health') {
+    return res.sendFile(path.join(frontendDistPath, 'index.html'));
   }
-  res.sendFile(path.join(frontendDistPath, 'index.html'));
+  next();
 });
 
 // Error handling
