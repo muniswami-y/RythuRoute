@@ -81,7 +81,13 @@ class Order {
 
   static async findByCustomer(customerId) {
     const [rows] = await pool.execute(
-      `SELECT * FROM orders WHERE customer_id = ? ORDER BY created_at DESC`,
+      `SELECT o.*, 
+              a.address, a.city, a.state, a.pincode,
+              (SELECT COUNT(*) FROM order_items WHERE order_id = o.id) as item_count
+       FROM orders o 
+       LEFT JOIN addresses a ON o.address_id = a.id
+       WHERE o.customer_id = ? 
+       ORDER BY o.created_at DESC`,
       [customerId]
     );
     return rows;
@@ -107,7 +113,7 @@ class Order {
        JOIN products p ON oi.product_id = p.id
        JOIN users u ON o.customer_id = u.id
        JOIN addresses a ON o.address_id = a.id
-       WHERE oi.farmer_id = ? AND o.payment_status = 'paid'
+       WHERE oi.farmer_id = ?
        ORDER BY o.created_at DESC`,
       [farmerId]
     );

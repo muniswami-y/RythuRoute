@@ -42,8 +42,8 @@ export default function Orders() {
                       <Clock size={14} /> Placed on {new Date(order.created_at).toLocaleDateString()}
                     </div>
                   </div>
-                  <span className="badge badge-success" style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)' }}>
-                    <CheckCircle2 size={14} /> Paid
+                  <span className={`badge ${order.payment_status === 'paid' ? 'badge-success' : 'badge-warning'}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)' }}>
+                    <CheckCircle2 size={14} /> {order.payment_status === 'paid' ? 'Paid' : 'Payment Pending'}
                   </span>
                 </div>
 
