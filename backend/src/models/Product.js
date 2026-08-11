@@ -44,7 +44,7 @@ class Product {
 
     // Default sorting
     query += ` ORDER BY p.created_at DESC LIMIT ? OFFSET ?`;
-    queryParams.push(limit.toString(), offset.toString());
+    queryParams.push(parseInt(limit) || 20, parseInt(offset) || 0);
 
     // Execute with prepared statements
     const [rows] = await pool.execute(query, queryParams);

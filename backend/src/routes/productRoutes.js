@@ -10,9 +10,9 @@ const router = express.Router();
 router.get('/', productController.getProducts);
 router.get('/:id', productController.getProductDetails);
 
-// Farmer routes (Protected)
+// Farmer & Admin routes (Protected)
 router.use(authMiddleware);
-router.use(requireRole('farmer'));
+router.use(requireRole('farmer', 'admin'));
 
 router.get('/farmer/mine', productController.getFarmerProducts);
 router.post('/', upload.single('image'), productController.createProduct);

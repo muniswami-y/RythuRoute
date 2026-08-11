@@ -49,9 +49,9 @@ exports.createProduct = async (req, res, next) => {
     const User = require('../models/User');
     const currentUser = await User.findById(req.user.id);
     
-    // Only approved farmers can create products
-    if (!currentUser || currentUser.approval_status !== 'approved') {
-      return error(res, 'Your farmer account is pending approval', 403);
+    // Admins can always add products; Farmers can add products if approved or default
+    if (req.user.role !== 'admin' && currentUser && currentUser.approval_status === 'rejected') {
+      return error(res, 'Your farmer account has been rejected', 403);
     }
 
     const { name, description, category, price, unit, quantity_available } = req.body;
