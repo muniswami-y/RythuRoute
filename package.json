@@ -4,8 +4,8 @@
   "description": "RythuRoute - Fresh Farm Direct Marketplace",
   "main": "backend/src/server.js",
   "scripts": {
-    "install:all": "npm --prefix backend install && npm --prefix frontend install --include=dev",
-    "build": "npm --prefix backend install && npm --prefix frontend install --include=dev && npm --prefix frontend run build && node backend/seed.js",
+    "install:all": "npm --prefix backend install && npm --prefix frontend install --include=dev --include=optional",
+    "build": "npm --prefix backend install && npm --prefix frontend install --include=dev --include=optional && npm --prefix frontend run build && node backend/seed.js",
     "seed": "node backend/seed.js",
     "start": "node backend/src/server.js",
     "dev:backend": "npm run --prefix backend dev",
