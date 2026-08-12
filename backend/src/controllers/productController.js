@@ -55,7 +55,7 @@ exports.createProduct = async (req, res, next) => {
     }
 
     const { name, description, category, price, unit, quantity_available } = req.body;
-    let image_url = null;
+    let image_url = req.body.image_url || null;
     
     if (req.file) {
       image_url = `/uploads/products/${req.file.filename}`;
