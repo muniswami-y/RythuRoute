@@ -1,110 +1,79 @@
-# 🚀 RythuRoute Permanent Deployment Guide
+# 🚀 RythuRoute Permanent Self-Hosting & Cloudflare Tunnel Guide
 
-This guide explains how to deploy **RythuRoute** online so it stays **live 24/7** and all your data (users, products, orders, addresses, payments) is **permanently saved**.
-
----
-
-## 💡 Why Does Data Disappear on Free Cloud Hosts?
-
-Free cloud hosting platforms (like Render, Railway, Fly.io, Heroku) use **ephemeral filesystems**. When the server goes to sleep or redeploys, local files like `database.sqlite` and local uploaded photos get reset.
-
-### ✅ The Permanent Solution: Cloud Database
-RythuRoute has **built-in dual database support**:
-- If `DATABASE_URL` is set, it automatically connects to a **Cloud PostgreSQL database** (data is permanently saved forever).
-- If not set, it defaults to local SQLite.
+This guide shows how to run **RythuRoute** on your Windows PC and make it publicly available across the internet **24/7 with a permanent HTTPS domain** — with **zero hosting cost** and **100% permanent data storage**.
 
 ---
 
-## 🌟 Method 1: Render + Free Neon PostgreSQL (Recommended - 100% Free)
+## 🌟 Why Self-Hosting with Cloudflare Tunnel is the Best Choice
 
-### Step 1: Create a Free Permanent Cloud PostgreSQL Database
-1. Go to **[Neon.tech](https://neon.tech)** (or **[Supabase.com](https://supabase.com)**) and sign up for free.
-2. Click **Create Project** (e.g. name it `rythuroute-db`).
-3. Under **Connection Details**, copy the **Postgres Connection URI** string:
-   ```text
-   postgresql://username:password@ep-xyz.us-east-2.aws.neon.tech/neondb?sslmode=require
+| Feature | Cloudflare Tunnel Self-Hosting | Free Cloud Hosts (Render, Heroku, etc.) |
+|---|---|---|
+| **Cost** | **100% Free Forever** | Often paid / sleep after inactivity |
+| **Data Safety** | **100% Permanent on your Hard Drive** | Ephemeral (erased on restarts/sleeps) |
+| **Image Uploads** | **Saved permanently in `/uploads`** | Deleted on redeploy |
+| **Public HTTPS URL** | **Yes (Cloudflare SSL included)** | Yes |
+| **Setup Time** | **1 Double-Click (`start-online.bat`)** | Multiple signup steps |
+
+---
+
+## ⚡ Option 1: Instant 1-Click Launch (Quick Tunnel)
+
+1. Navigate to your project folder: `D:\RythuRoute`
+2. **Double-click `start-online.bat`**.
+3. It will:
+   - Compile the React frontend and verify the SQLite database.
+   - Start the RythuRoute Node.js server on port 5000.
+   - Open a secure Cloudflare Tunnel and output your public URL:
+     ```text
+     +--------------------------------------------------------------------------------------------+
+     |  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |
+     |  https://random-words-here.trycloudflare.com                                               |
+     +--------------------------------------------------------------------------------------------+
+     ```
+4. **Copy the `https://...trycloudflare.com` URL** and open it on your phone, laptop, or share it with anyone!
+
+---
+
+## 🌐 Option 2: Permanent Custom Domain (Zero Trust Tunnel)
+
+If you want a **fixed permanent domain name** (e.g. `market.yourdomain.com`) that never changes:
+
+1. Create a free account at **[Cloudflare Dashboard](https://dash.cloudflare.com/)**.
+2. Go to **Zero Trust** → **Networks** → **Tunnels** → click **Create a Tunnel**.
+3. Name your tunnel (e.g. `rythuroute`) and click **Save Tunnel**.
+4. Choose **Windows** environment and copy the install command shown on screen:
+   ```powershell
+   cloudflared.exe service install <YOUR_TOKEN>
+   ```
+5. Open PowerShell as Administrator and run the command.
+6. Under the **Public Hostname** tab in Cloudflare:
+   - **Service Type**: `HTTP`
+   - **URL**: `localhost:5000`
+7. Click **Save Hostname**.
+
+Your site will now be live on your custom domain 24/7, and Cloudflare will automatically keep the connection alive even if your PC restarts!
+
+---
+
+## 🔄 Running the Server 24/7 in Background (PM2)
+
+To keep the Node.js server running in the background without keeping a Command Prompt window open:
+
+1. Install PM2 globally:
+   ```powershell
+   npm install -g pm2
+   ```
+2. Start RythuRoute with PM2:
+   ```powershell
+   pm2 start backend/src/server.js --name "rythuroute"
+   ```
+3. Save the process so it restarts if your computer reboots:
+   ```powershell
+   pm2 save
    ```
 
 ---
 
-### Step 2: Push Your Code to GitHub
-Ensure all your latest changes are pushed to your GitHub repository:
-```powershell
-git add .
-git commit -m "Configure permanent deployment with cloud database"
-git push origin main
-```
-
----
-
-### Step 3: Deploy on Render
-1. Go to **[Render Dashboard](https://dashboard.render.com/)** and log in.
-2. Click **New +** → **Web Service**.
-3. Select **Build and deploy from a Git repository** → connect `RythuRoute` (`muniswami-y/RythuRoute`).
-4. Fill in the deployment settings:
-   - **Name**: `rythuroute` (or your preferred name)
-   - **Region**: Closest to your users (e.g., *Singapore*, *Frankfurt*, or *Ohio*)
-   - **Branch**: `main`
-   - **Root Directory**: *(Leave empty)*
-   - **Runtime**: `Node`
-   - **Build Command**: `npm run build`
-   - **Start Command**: `npm start`
-   - **Instance Type**: `Free`
-
-5. Scroll down to **Environment Variables** and add:
-   | Key | Value | Notes |
-   |---|---|---|
-   | `NODE_ENV` | `production` | Enables production mode & SPA routing |
-   | `DATABASE_URL` | `postgresql://...` | Paste your Neon/Supabase PostgreSQL connection string |
-   | `JWT_SECRET` | *(Generate or type a random 32-char string)* | For secure user login tokens |
-   | `JWT_EXPIRES_IN` | `7d` | Login token expiry |
-   | `RAZORPAY_KEY_ID` | `rzp_test_...` | *(Optional: From your Razorpay Dashboard)* |
-   | `RAZORPAY_KEY_SECRET` | `your_razorpay_secret` | *(Optional: From your Razorpay Dashboard)* |
-
-6. Click **Deploy Web Service**.
-
----
-
-### Step 4: Verify Deployment
-- Render will install dependencies, build the React frontend bundle, and run `backend/seed.js` to automatically initialize all database tables.
-- Once the log shows `Server running on port 10000 in production mode`, click your Render URL:
-  `https://rythuroute-xxxx.onrender.com`
-
-**Default Admin Credentials:**
+## 🔑 Default Admin Account
 - **Email**: `admin@rythuroute.com`
 - **Password**: `admin123`
-
----
-
-## 🚂 Method 2: Railway.app Deployment (Alternative)
-
-1. Go to **[Railway.app](https://railway.app)** and log in with GitHub.
-2. Click **New Project** → **Provision PostgreSQL**.
-3. In the same project, click **New** → **GitHub Repo** → select `RythuRoute`.
-4. Add environment variables in the service settings:
-   - `DATABASE_URL`: `${{Postgres.DATABASE_URL}}` (Railway links this automatically)
-   - `NODE_ENV`: `production`
-   - `JWT_SECRET`: `your_random_jwt_secret_key`
-5. Go to **Settings** → **Generate Domain** to get your live URL.
-
----
-
-## 💻 Method 3: Self-Hosting from Your PC with Cloudflare Tunnel (100% Zero-Cost Local Host)
-
-If you prefer to host from your own computer where SQLite and images are stored directly on your hard drive:
-
-1. Double-click `host-my-own.bat` in the project folder to start the server at `http://localhost:5000`.
-2. Install [Cloudflare Tunnel (`cloudflared`)](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/get-started/create-remote-tunnel/):
-   ```powershell
-   cloudflared tunnel --url http://localhost:5000
-   ```
-3. Cloudflare gives you a permanent, free public HTTPS URL (`https://your-tunnel-name.trycloudflare.com`) pointing to your PC.
-
----
-
-## 🔒 Security & Best Practices Checklist
-
-- [x] Change the default admin password after initial login (`admin@rythuroute.com`).
-- [x] Add your live `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` when moving to live payments.
-- [x] Cloud PostgreSQL stores all records securely with automatic SSL encryption.
-- [x] Keep your `JWT_SECRET` confidential in the cloud host's Environment Variables dashboard.
